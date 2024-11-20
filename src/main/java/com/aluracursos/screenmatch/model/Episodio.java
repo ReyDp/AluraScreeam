@@ -24,7 +24,7 @@ public class Episodio {
     public Episodio(Integer temporada, DatosEpisodio d) {
         this.temporada = temporada;
         this.titulo = d.titulo();
-        this.numeroEpisodio = d.numeroEspisodio();
+        this.numeroEpisodio = d.numeroEpisodio();
         try {
             this.calificacion = Double.valueOf(d.calificacion());
         }catch (NumberFormatException e){

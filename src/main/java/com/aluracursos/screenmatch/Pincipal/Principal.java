@@ -17,6 +17,7 @@ public class Principal {
     ConvertirDatos conversor = new ConvertirDatos();
     private  SeriesRepository repositorio;
     private List<Series> series;
+    private  Optional<Series> seriesBuscadas;
 
     public Principal(SeriesRepository repository) {
         this.repositorio = repository;
@@ -35,6 +36,9 @@ public class Principal {
                     4 - buscar series por titulo
                     5 - Top 5 series
                     6 - Categoria
+                    7 - Series por temporada y evaluaciones
+                    8 - Buscar episodio
+                    9 - Top 5 episodios
                     0 - Salir
                     """;
             System.out.println(menu);
@@ -60,6 +64,15 @@ public class Principal {
                     break;
                 case 6:
                     buscarSeriePorCategoria();
+                    break;
+                case 7:
+                    mostrarSeriesPorTemporadasEvaluaciones();
+                    break;
+                case 8:
+                    buscarEpisodiosPorTitulo();
+                    break;
+                case 9:
+                    buscarTop5EpisodiosPorSerie();
                     break;
                 case 0:
                     System.out.println("Saliendo de la aplicación...");
@@ -128,7 +141,7 @@ public class Principal {
         System.out.println("Titulo de la serie: ");
         var nombreSerie = sc.nextLine();
 
-        Optional<Series> seriesBuscadas = repositorio.findByTituloContainsIgnoreCase(nombreSerie);
+        seriesBuscadas = repositorio.findByTituloContainsIgnoreCase(nombreSerie);
         if (seriesBuscadas.isPresent()){
             System.out.println("Serie buscada: "+seriesBuscadas.get());
         }else {
@@ -149,6 +162,35 @@ public class Principal {
         List<Series> seriesPorCategoria = repositorio.findByGenero(categoria);
         System.out.println("Las series de la categoria: "+genero);
         seriesPorCategoria.forEach(System.out::println);
+    }
+
+    private void mostrarSeriesPorTemporadasEvaluaciones(){
+        System.out.print("Digite la temporada: ");
+        var totalTemporada = sc.nextInt();
+        System.out.println("Digite la evaluacion: ");
+        var evaluacion = sc.nextDouble();
+        List<Series> filtroSeries = repositorio.seriesPorTemporadaYEvaluaciones(totalTemporada,evaluacion);
+        System.out.println("**** Series filtradas ****");
+        filtroSeries.forEach(s-> System.out.println(s.getTitulo()+ " evaluacion: " + s.getEvaluacion()));
+    }
+
+    private void buscarEpisodiosPorTitulo(){
+        System.out.println("Digite el nombre del episodio: ");
+        var nombreEpisodio = sc.nextLine();
+        List<Episodio> episodiosEncontrados = repositorio.EspisodiosPorNormbre(nombreEpisodio);
+        episodiosEncontrados.forEach(e-> System.out.printf("Seire: %s Episodio %s Temporada %s Evaluación %s",
+                e.getSeries(), e.getNumeroEpisodio(), e.getTemporada(), e.getCalificacion()));
+    }
+
+    private void buscarTop5EpisodiosPorSerie(){
+        buseriesPorTitulo();
+        if (seriesBuscadas.isPresent()){
+            var serie = seriesBuscadas.get();
+            List<Episodio> topEpisodios = repositorio.top5Episodios(serie);
+            topEpisodios.forEach(e-> System.out.printf("Seire: %s Episodio %s Temporada %s Evaluación %s",
+                    e.getSeries(), e.getNumeroEpisodio(), e.getTemporada(), e.getCalificacion()));
+
+        }
     }
 
 }
