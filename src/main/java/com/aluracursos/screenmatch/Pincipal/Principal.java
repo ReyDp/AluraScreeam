@@ -34,6 +34,7 @@ public class Principal {
                     3 - Mostrar series buscadas
                     4 - buscar series por titulo
                     5 - Top 5 series
+                    6 - Categoria
                     0 - Salir
                     """;
             System.out.println(menu);
@@ -56,6 +57,10 @@ public class Principal {
                     break;
                 case 5:
                     buscarTop5Series();
+                    break;
+                case 6:
+                    buscarSeriePorCategoria();
+                    break;
                 case 0:
                     System.out.println("Saliendo de la aplicación...");
                     break;
@@ -130,9 +135,20 @@ public class Principal {
             System.out.println("La serie no fue encontrada");
         }
     }
+
     private void buscarTop5Series(){
         List<Series> topSeries = repositorio.findTop5ByOrderByEvaluacionDesc();
 
         topSeries.forEach(s -> System.out.println("Serie: "+s.getTitulo()+ " Calificación: "+s.getEvaluacion()));
     }
+
+    private void buscarSeriePorCategoria(){
+        System.out.println("Digite el genero de la serie: ");
+        var genero = sc.nextLine();
+        var categoria = Categoria.fromEspanol(genero);
+        List<Series> seriesPorCategoria = repositorio.findByGenero(categoria);
+        System.out.println("Las series de la categoria: "+genero);
+        seriesPorCategoria.forEach(System.out::println);
+    }
+
 }
