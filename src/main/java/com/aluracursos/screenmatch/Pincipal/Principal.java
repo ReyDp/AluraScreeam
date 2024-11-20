@@ -188,7 +188,7 @@ public class Principal {
             var serie = seriesBuscadas.get();
             List<Episodio> topEpisodios = repositorio.top5Episodios(serie);
             topEpisodios.forEach(e-> System.out.printf("Seire: %s Episodio %s Temporada %s Evaluación %s",
-                    e.getSeries(), e.getNumeroEpisodio(), e.getTemporada(), e.getCalificacion()));
+                    e.getSeries(), e.getTitulo(), e.getTemporada(), e.getCalificacion()));
 
         }
     }
